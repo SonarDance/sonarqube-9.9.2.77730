@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.base",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["./src/main/js/@types/*"]
+    }
+  },
+  "include": ["./src/main/js/**/*"],
+}

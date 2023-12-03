@@ -1,0 +1,23 @@
+description = 'SonarQube :: Authentication :: LDAP'
+
+configurations {
+    testImplementation.extendsFrom compileOnlyApi
+}
+
+dependencies {
+    // please keep the list ordered
+
+    api 'commons-lang:commons-lang'
+
+    compileOnlyApi 'com.google.code.findbugs:jsr305'
+    compileOnlyApi 'javax.servlet:javax.servlet-api'
+    compileOnlyApi project(':server:sonar-process')
+    compileOnlyApi project(':sonar-core')
+
+    testImplementation 'com.tngtech.java:junit-dataprovider'
+    testImplementation 'junit:junit'
+    testImplementation 'org.assertj:assertj-core'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation project(":sonar-testing-ldap")
+
+}

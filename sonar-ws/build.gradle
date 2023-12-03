@@ -1,0 +1,51 @@
+sonar {
+  properties {
+    property 'sonar.projectName', "${projectTitle} :: Web Service"
+    property 'sonar.exclusions', 'src/main/java/org/sonarqube/ws/client/*/*.java'
+  }
+}
+
+configurations {
+  testImplementation.extendsFrom(compileOnlyApi)
+}
+
+dependencies {
+  // please keep list ordered
+
+  api 'com.google.protobuf:protobuf-java'
+  api 'com.squareup.okhttp3:okhttp'
+  api 'com.google.code.gson:gson'
+  api 'org.sonarsource.api.plugin:sonar-plugin-api'
+
+  compileOnlyApi 'com.google.code.findbugs:jsr305'
+  compileOnlyApi 'javax.annotation:javax.annotation-api'
+
+  testImplementation 'com.squareup.okhttp3:mockwebserver'
+  testImplementation 'com.squareup.okio:okio'
+  testImplementation 'commons-io:commons-io'
+  testImplementation 'commons-lang:commons-lang'
+  testImplementation 'junit:junit'
+  testImplementation 'org.assertj:assertj-core'
+  testImplementation 'org.hamcrest:hamcrest-core'
+  testImplementation 'org.mockito:mockito-core'
+  testImplementation project(':sonar-testing-harness')
+}
+
+artifactoryPublish.skip = false
+
+// Produce Java 11 bytecode while making sure the code does not use any APIs from Java 17
+tasks.withType(JavaCompile) {
+  options.release = 11
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      if (release) {
+        artifact sourcesJar
+        artifact javadocJar
+      }
+    }
+  }
+}

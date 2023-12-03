@@ -1,0 +1,51 @@
+
+dependencies {
+  api 'com.google.guava:guava'
+  api 'commons-io:commons-io'
+  api 'commons-lang:commons-lang'
+  api 'org.apache.commons:commons-csv'
+
+  compileOnlyApi 'com.google.code.findbugs:jsr305'
+  compileOnlyApi 'org.sonarsource.api.plugin:sonar-plugin-api'
+
+  testImplementation 'junit:junit'
+  testImplementation 'org.assertj:assertj-core'
+  testImplementation 'org.mockito:mockito-core'
+  testImplementation project(':sonar-plugin-api-impl')
+}
+
+jar {
+  manifest {
+    attributes(
+      'Plugin-Key': 'xoo',
+      'Plugin-Version': project.version,
+      'Plugin-Class': 'org.sonar.xoo.XooPlugin',
+      'Plugin-ChildFirstClassLoader': 'false',
+      'Sonar-Version': project.version,
+      'SonarLint-Supported': 'true',
+      'Plugin-Name': 'Xoo'
+    )
+  }
+  into('META-INF/lib') {
+    from configurations.runtimeClasspath
+  }
+}
+
+artifactoryPublish.skip = false
+
+// Produce Java 11 bytecode while making sure the code does not use any APIs from Java 17
+tasks.withType(JavaCompile) {
+  options.release = 11
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      if (release) {
+        artifact sourcesJar
+        artifact javadocJar
+      }
+    }
+  }
+}

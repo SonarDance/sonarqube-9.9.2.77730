@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render and submit 1`] = `
+<Formik
+  initialValues={
+    {
+      "foo": "bar",
+    }
+  }
+  onSubmit={[Function]}
+  validate={[MockFunction]}
+  validateOnMount={true}
+>
+  <Component />
+</Formik>
+`;

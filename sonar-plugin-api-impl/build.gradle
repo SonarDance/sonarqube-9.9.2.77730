@@ -1,0 +1,52 @@
+sonar {
+  properties {
+    property 'sonar.projectName', "${projectTitle} :: Plugin API Implementation"
+  }
+}
+
+dependencies {
+  // please keep the list grouped by configuration and ordered by name
+
+  api 'commons-codec:commons-codec'
+  api 'commons-io:commons-io'
+  api 'commons-lang:commons-lang'
+  api 'org.apache.commons:commons-csv'
+  api 'org.sonarsource.api.plugin:sonar-plugin-api'
+
+  compileOnlyApi 'com.google.code.findbugs:jsr305'
+  compileOnlyApi 'junit:junit'
+
+  testCompileOnly 'com.google.code.findbugs:jsr305'
+
+  testImplementation 'com.google.guava:guava'
+  testImplementation 'com.tngtech.java:junit-dataprovider'
+  testImplementation 'junit:junit'
+  testImplementation 'org.assertj:assertj-core'
+  testImplementation 'org.mockito:mockito-core'
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+processResources {
+  filter ReplaceTokens, tokens: [
+          'project.version': project.version
+  ]
+}
+
+artifactoryPublish.skip = false
+
+// Produce Java 11 bytecode while making sure the code does not use any APIs from Java 17
+tasks.withType(JavaCompile) {
+  options.release = 11
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      if (release) {
+        artifact sourcesJar
+        artifact javadocJar
+      }
+    }
+  }
+}
